@@ -1,0 +1,689 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    min-height: 100vh;
+    overflow: hidden;
+}
+
+/* Main Layout */
+.game-layout {
+    display: flex;
+    height: 100vh;
+    padding: 20px;
+    gap: 20px;
+}
+
+/* Dashboard - Left Panel */
+.dashboard {
+    width: 280px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dashboard header {
+    text-align: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.dashboard h1 {
+    font-size: 1.8rem;
+    margin-bottom: 5px;
+    background: linear-gradient(45deg, #ff8a00, #e52e71);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.dashboard p {
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+/* Game Stats */
+.game-stats {
+    display: flex;
+    justify-content: space-between;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.stat {
+    text-align: center;
+}
+
+.stat-value {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.stat-label {
+    font-size: 0.8rem;
+    opacity: 0.8;
+}
+
+/* Difficulty */
+.difficulty h3 {
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.difficulty-buttons {
+    display: flex;
+    gap: 8px;
+}
+
+.difficulty-buttons button {
+    flex: 1;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+button {
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+    backdrop-filter: blur(10px);
+}
+
+button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+button.active {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.btn-primary {
+    background: linear-gradient(45deg, #ff8a00, #e52e71);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Sound Toggle Button */
+#sound-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+#sound-toggle.sound-on {
+    background: rgba(76, 175, 80, 0.3);
+    border-color: rgba(76, 175, 80, 0.5);
+}
+
+#sound-toggle.sound-off {
+    background: rgba(244, 67, 54, 0.3);
+    border-color: rgba(244, 67, 54, 0.5);
+}
+
+/* Instructions */
+.instructions {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px;
+    border-radius: 10px;
+    flex-grow: 1;
+}
+
+.instructions h3 {
+    margin-bottom: 10px;
+    font-size: 1rem;
+}
+
+.instructions ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.instructions li {
+    margin-bottom: 8px;
+    font-size: 0.85rem;
+    opacity: 0.9;
+    padding-left: 15px;
+    position: relative;
+}
+
+.instructions li:before {
+    content: "•";
+    position: absolute;
+    left: 0;
+    color: #ff8a00;
+}
+
+/* Game Board - Right Panel */
+.game-board {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-height: calc(100vh - 40px);
+    overflow: hidden;
+    position: relative;
+}
+
+/* Card Container - Fixed to prevent overflow */
+.card-container {
+    display: grid;
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    place-items: center;
+    overflow: hidden;
+}
+
+/* Dynamic grid layouts with auto-fit sizing */
+.grid-4x4 {
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+    padding: 20px;
+    gap: 6px;
+}
+
+.grid-6x6 {
+    grid-template-columns: repeat(6, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    padding: 10px;
+    gap: 6px;
+}
+
+/* Memory Game Card Wrapper - Fixed sizing */
+.memory-card {
+    position: relative;
+    cursor: pointer;
+    width: auto;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+}
+
+.memory-card:hover .card {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.memory-card.matched {
+    opacity: 0.7;
+    cursor: default;
+}
+
+.memory-card.matched:hover .card {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Card Styles - Fixed sizing and alignment */
+.card {
+    position: relative !important;
+    display: inline-block !important;
+    width: auto !important;
+    height: 100% !important;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    aspect-ratio: 3/4;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+}
+
+.card:hover {
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.memory-card.flipped .card {
+    transform: rotateY(180deg);
+}
+
+/* Card back - NO RANKS SHOULD APPEAR HERE */
+.card .back {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url("faces/back.svg");
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    border-radius: 8px;
+    backface-visibility: hidden;
+    z-index: 1;
+}
+
+/* Card front - RANKS SHOULD ONLY APPEAR HERE */
+.card .face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-position: 50% 50%;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    border-radius: 8px;
+    backface-visibility: hidden;
+    transform: rotateY(180deg);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Rank indicators - ONLY on the front face */
+.rank-top, .rank-bottom {
+    position: absolute;
+    font-weight: bold;
+    text-align: center;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1;
+    z-index: 3;
+    pointer-events: none;
+}
+
+.rank-top {
+    top: 5px;
+    left: 0px;
+}
+
+.rank-bottom {
+    bottom: 5px;
+    right: 0px;
+    transform: rotate(180deg);
+}
+
+.card.spades .rank-top,
+.card.spades .rank-bottom,
+.card.clubs .rank-top,
+.card.clubs .rank-bottom {
+    color: #000;
+}
+
+.card.hearts .rank-top,
+.card.hearts .rank-bottom,
+.card.diamonds .rank-top,
+.card.diamonds .rank-bottom {
+    color: #d40000;
+}
+
+/* DIFFERENT SIZES FOR 4x4 AND 6x6 GRIDS */
+
+/* 4x4 Grid - Larger cards, larger text */
+.grid-4x4 .card {
+    max-width: 100px;
+    max-height: 140px;
+}
+
+.grid-4x4 .rank-top,
+.grid-4x4 .rank-bottom {
+    font-size: 0.7rem;
+    padding: 4px;
+}
+
+/* 6x6 Grid - Smaller cards, smaller text */
+.grid-6x6 .card {
+    max-width: 70px;
+    max-height: 98px;
+}
+
+.grid-6x6 .rank-top,
+.grid-6x6 .rank-bottom {
+    font-size: 0.5rem;
+    padding: 2px;
+}
+
+.grid-6x6 .rank-top {
+    top: 3px;
+    left: 1px;
+}
+
+.grid-6x6 .rank-bottom {
+    bottom: 3px;
+    right: 1px;
+}
+
+/* Card ranks */
+.card.rank1 .rank-top,
+.card.rank1 .rank-bottom { content: "A"; }
+.card.rank2 .rank-top,
+.card.rank2 .rank-bottom { content: "2"; }
+.card.rank3 .rank-top,
+.card.rank3 .rank-bottom { content: "3"; }
+.card.rank4 .rank-top,
+.card.rank4 .rank-bottom { content: "4"; }
+.card.rank5 .rank-top,
+.card.rank5 .rank-bottom { content: "5"; }
+.card.rank6 .rank-top,
+.card.rank6 .rank-bottom { content: "6"; }
+.card.rank7 .rank-top,
+.card.rank7 .rank-bottom { content: "7"; }
+.card.rank8 .rank-top,
+.card.rank8 .rank-bottom { content: "8"; }
+.card.rank9 .rank-top,
+.card.rank9 .rank-bottom { content: "9"; }
+.card.rank10 .rank-top,
+.card.rank10 .rank-bottom { content: "10"; }
+.card.rank11 .rank-top,
+.card.rank11 .rank-bottom { content: "J"; }
+.card.rank12 .rank-top,
+.card.rank12 .rank-bottom { content: "Q"; }
+.card.rank13 .rank-top,
+.card.rank13 .rank-bottom { content: "K"; }
+
+/* Card faces - Spades */
+.card.spades.rank1 .face { background-image: url("faces/0_1.svg"); }
+.card.spades.rank2 .face { background-image: url("faces/0_2.svg"); }
+.card.spades.rank3 .face { background-image: url("faces/0_3.svg"); }
+.card.spades.rank4 .face { background-image: url("faces/0_4.svg"); }
+.card.spades.rank5 .face { background-image: url("faces/0_5.svg"); }
+.card.spades.rank6 .face { background-image: url("faces/0_6.svg"); }
+.card.spades.rank7 .face { background-image: url("faces/0_7.svg"); }
+.card.spades.rank8 .face { background-image: url("faces/0_8.svg"); }
+.card.spades.rank9 .face { background-image: url("faces/0_9.svg"); }
+.card.spades.rank10 .face { background-image: url("faces/0_10.svg"); }
+.card.spades.rank11 .face { background-image: url("faces/0_11.svg"); }
+.card.spades.rank12 .face { background-image: url("faces/0_12.svg"); }
+.card.spades.rank13 .face { background-image: url("faces/0_13.svg"); }
+
+/* Hearts */
+.card.hearts.rank1 .face { background-image: url("faces/1_1.svg"); }
+.card.hearts.rank2 .face { background-image: url("faces/1_2.svg"); }
+.card.hearts.rank3 .face { background-image: url("faces/1_3.svg"); }
+.card.hearts.rank4 .face { background-image: url("faces/1_4.svg"); }
+.card.hearts.rank5 .face { background-image: url("faces/1_5.svg"); }
+.card.hearts.rank6 .face { background-image: url("faces/1_6.svg"); }
+.card.hearts.rank7 .face { background-image: url("faces/1_7.svg"); }
+.card.hearts.rank8 .face { background-image: url("faces/1_8.svg"); }
+.card.hearts.rank9 .face { background-image: url("faces/1_9.svg"); }
+.card.hearts.rank10 .face { background-image: url("faces/1_10.svg"); }
+.card.hearts.rank11 .face { background-image: url("faces/1_11.svg"); }
+.card.hearts.rank12 .face { background-image: url("faces/1_12.svg"); }
+.card.hearts.rank13 .face { background-image: url("faces/1_13.svg"); }
+
+/* Clubs */
+.card.clubs.rank1 .face { background-image: url("faces/2_1.svg"); }
+.card.clubs.rank2 .face { background-image: url("faces/2_2.svg"); }
+.card.clubs.rank3 .face { background-image: url("faces/2_3.svg"); }
+.card.clubs.rank4 .face { background-image: url("faces/2_4.svg"); }
+.card.clubs.rank5 .face { background-image: url("faces/2_5.svg"); }
+.card.clubs.rank6 .face { background-image: url("faces/2_6.svg"); }
+.card.clubs.rank7 .face { background-image: url("faces/2_7.svg"); }
+.card.clubs.rank8 .face { background-image: url("faces/2_8.svg"); }
+.card.clubs.rank9 .face { background-image: url("faces/2_9.svg"); }
+.card.clubs.rank10 .face { background-image: url("faces/2_10.svg"); }
+.card.clubs.rank11 .face { background-image: url("faces/2_11.svg"); }
+.card.clubs.rank12 .face { background-image: url("faces/2_12.svg"); }
+.card.clubs.rank13 .face { background-image: url("faces/2_13.svg"); }
+
+/* Diamonds */
+.card.diamonds.rank1 .face { background-image: url("faces/3_1.svg"); }
+.card.diamonds.rank2 .face { background-image: url("faces/3_2.svg"); }
+.card.diamonds.rank3 .face { background-image: url("faces/3_3.svg"); }
+.card.diamonds.rank4 .face { background-image: url("faces/3_4.svg"); }
+.card.diamonds.rank5 .face { background-image: url("faces/3_5.svg"); }
+.card.diamonds.rank6 .face { background-image: url("faces/3_6.svg"); }
+.card.diamonds.rank7 .face { background-image: url("faces/3_7.svg"); }
+.card.diamonds.rank8 .face { background-image: url("faces/3_8.svg"); }
+.card.diamonds.rank9 .face { background-image: url("faces/3_9.svg"); }
+.card.diamonds.rank10 .face { background-image: url("faces/3_10.svg"); }
+.card.diamonds.rank11 .face { background-image: url("faces/3_11.svg"); }
+.card.diamonds.rank12 .face { background-image: url("faces/3_12.svg"); }
+.card.diamonds.rank13 .face { background-image: url("faces/3_13.svg"); }
+
+/* Win Message */
+.message {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.9);
+    padding: 2rem;
+    border-radius: 15px;
+    text-align: center;
+    z-index: 100;
+    display: none;
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    min-width: 300px;
+    animation: popIn 0.5s ease-out;
+}
+
+.message h2 {
+    margin-bottom: 1rem;
+    font-size: 2rem;
+}
+
+.message p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+/* Animations */
+@keyframes matched {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.memory-card.matched .card {
+    animation: matched 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20%, 60% { transform: translateX(-3px); }
+    40%, 80% { transform: translateX(3px); }
+}
+
+.memory-card.error .card {
+    animation: shake 0.5s ease;
+}
+
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.5);
+    }
+    70% {
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+}
+
+.pulse {
+    animation: pulse 0.5s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .game-layout {
+        flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        overflow-y: auto;
+    }
+    
+    .dashboard {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    
+    .dashboard header {
+        width: 100%;
+    }
+    
+    .game-stats {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .difficulty {
+        flex: 1;
+        min-width: 150px;
+    }
+    
+    .controls {
+        flex: 1;
+        min-width: 150px;
+    }
+    
+    .instructions {
+        flex: 2;
+        min-width: 200px;
+    }
+    
+    .game-board {
+        min-height: 60vh;
+    }
+    
+    /* Smaller cards for tablet */
+    .grid-4x4 .card {
+        max-width: 80px;
+        max-height: 107px;
+    }
+    
+    .grid-4x4 .rank-top,
+    .grid-4x4 .rank-bottom {
+        font-size: 0.8rem;
+    }
+    
+    .grid-6x6 .card {
+        max-width: 60px;
+        max-height: 80px;
+    }
+    
+    .grid-6x6 .rank-top,
+    .grid-6x6 .rank-bottom {
+        font-size: 0.55rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard {
+        flex-direction: column;
+    }
+    
+    /* Even smaller cards for mobile */
+    .grid-4x4 .card {
+        max-width: 70px;
+        max-height: 93px;
+    }
+    
+    .grid-4x4 .rank-top,
+    .grid-4x4 .rank-bottom {
+        font-size: 0.7rem;
+    }
+    
+    .grid-6x6 .card {
+        max-width: 50px;
+        max-height: 67px;
+    }
+    
+    .grid-6x6 .rank-top,
+    .grid-6x6 .rank-bottom {
+        font-size: 0.5rem;
+    }
+    
+    .grid-4x4 {
+        gap: 6px;
+    }
+    
+    .grid-6x6 {
+        gap: 4px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-layout {
+        padding: 10px;
+    }
+    
+    .dashboard {
+        padding: 15px;
+    }
+    
+    .game-board {
+        padding: 10px;
+    }
+    
+    .card-container {
+        padding: 8px;
+    }
+    
+    /* Smallest cards for very small screens */
+    .grid-4x4 .card {
+        max-width: 60px;
+        max-height: 80px;
+    }
+    
+    .grid-4x4 .rank-top,
+    .grid-4x4 .rank-bottom {
+        font-size: 0.6rem;
+    }
+    
+    .grid-6x6 .card {
+        max-width: 40px;
+        max-height: 53px;
+    }
+    
+    .grid-6x6 .rank-top,
+    .grid-6x6 .rank-bottom {
+        font-size: 0.45rem;
+    }
+    
+    .grid-4x4 {
+        gap: 4px;
+    }
+    
+    .grid-6x6 {
+        gap: 3px;
+    }
+}
