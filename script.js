@@ -30,11 +30,65 @@ document.addEventListener('DOMContentLoaded', () => {
     let gameStarted = false;
     let canFlip = true;
     let gridSize = 4; // Default to 4x4 grid
-    let soundEnabled = true; // Sound is enabled by default
+    let soundEnabled = true;
     
-    // Card suits and ranks
-    const suits = ['spades', 'hearts', 'clubs', 'diamonds'];
-    const ranks = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
+    // Available card images (excluding back.svg)
+    const availableImages = [
+        "ace_of_clubs.png",
+        "ace_of_diamonds.png",
+        "ace_of_hearts.png",
+        "ace_of_spades.png",
+        "2_of_clubs.png",
+        "2_of_diamonds.png",
+        "2_of_hearts.png",
+        "2_of_spades.png",
+        "3_of_clubs.png",
+        "3_of_diamonds.png",
+        "3_of_hearts.png",
+        "3_of_spades.png",
+        "4_of_clubs.png",
+        "4_of_diamonds.png",
+        "4_of_hearts.png",
+        "4_of_spades.png",
+        "5_of_clubs.png",
+        "5_of_diamonds.png",
+        "5_of_hearts.png",
+        "5_of_spades.png",
+        "6_of_clubs.png",
+        "6_of_diamonds.png",
+        "6_of_hearts.png",
+        "6_of_spades.png",
+        "7_of_clubs.png",
+        "7_of_diamonds.png",
+        "7_of_hearts.png",
+        "7_of_spades.png",
+        "8_of_clubs.png",
+        "8_of_diamonds.png",
+        "8_of_hearts.png",
+        "8_of_spades.png",
+        "9_of_clubs.png",
+        "9_of_diamonds.png",
+        "9_of_hearts.png",
+        "9_of_spades.png",
+        "10_of_clubs.png",
+        "10_of_diamonds.png", 
+        "10_of_hearts.png",
+        "10_of_spades.png",
+        "jack_of_clubs2.png",
+        "jack_of_diamonds2.png",
+        "jack_of_hearts2.png",
+        "jack_of_spades2.png",
+        "queen_of_clubs2.png",
+        "queen_of_diamonds2.png",
+        "queen_of_hearts2.png",
+        "queen_of_spades2.png",
+        "king_of_clubs2.png",
+        "king_of_diamonds2.png",
+        "king_of_hearts2.png",
+        "king_of_spades2.png",
+        "red_joker.png",
+        "black_joker.png"
+       ];
     
     // Initialize game
     function initGame() {
@@ -64,47 +118,47 @@ document.addEventListener('DOMContentLoaded', () => {
         createCards();
     }
     
-    // Create card elements using custom logic
+    // Create card elements using dynamic image-based logic
     function createCards() {
         cardContainer.innerHTML = '';
         
         // Determine number of pairs based on grid size
         const totalPairs = (gridSize * gridSize) / 2;
         
-        // Create pairs of card indices
-        const cardIndices = [];
-        const usedIndices = new Set();
-        
-        while (cardIndices.length < totalPairs * 2) {
-            const randomIndex = Math.floor(Math.random() * 52); // 52 cards total
-            if (!usedIndices.has(randomIndex)) {
-                // Add two copies of each card for matching
-                cardIndices.push(randomIndex);
-                cardIndices.push(randomIndex);
-                usedIndices.add(randomIndex);
-                
-                if (cardIndices.length >= totalPairs * 2) break;
-            }
+        // Check if we have enough unique images
+        if (availableImages.length < totalPairs) {
+            console.warn(`Not enough unique images. Need ${totalPairs}, have ${availableImages.length}`);
         }
         
-        // Shuffle the card indices
-        shuffleArray(cardIndices);
+        // Select random images for this game
+        const selectedImages = selectRandomImages(totalPairs);
+        
+        // Create pairs of image names
+        const imagePairs = [];
+        selectedImages.forEach(imageName => {
+            // Add two copies of each image for matching
+            imagePairs.push(imageName);
+            imagePairs.push(imageName);
+        });
+        
+        // Shuffle the image pairs
+        shuffleArray(imagePairs);
         
         // Update grid layout
         cardContainer.className = `card-container grid-${gridSize}x${gridSize}`;
         
         // Create card elements
-        cardIndices.forEach((cardIndex, index) => {
+        imagePairs.forEach((imageName, index) => {
             const cardWrapper = document.createElement('div');
             cardWrapper.className = 'memory-card';
             cardWrapper.dataset.index = index;
-            cardWrapper.dataset.cardId = cardIndex;
+            cardWrapper.dataset.imageName = imageName;
             
-            // Create card using custom logic
-            const card = createCardElement(cardIndex);
+            // Create card using dynamic logic
+            const card = createCardElement(imageName);
             
             // Add click handler
-            cardWrapper.addEventListener('click', () => flipCard(cardWrapper, cardIndex));
+            cardWrapper.addEventListener('click', () => flipCard(cardWrapper, imageName));
             
             // Mount card to wrapper
             cardWrapper.appendChild(card);
@@ -113,60 +167,48 @@ document.addEventListener('DOMContentLoaded', () => {
             cards.push({
                 wrapper: cardWrapper,
                 element: card,
-                id: cardIndex,
+                imageName: imageName,
                 isFlipped: false,
                 isMatched: false
             });
         });
     }
     
-    // Create a card element
-    function createCardElement(cardIndex) {
-        // Calculate suit and rank
-        const suitIndex = Math.floor(cardIndex / 13);
-        const rankIndex = cardIndex % 13;
-        const suit = suits[suitIndex];
-        const rank = ranks[rankIndex];
-        
+    // Select random images for the current game
+    function selectRandomImages(totalPairs) {
+        const shuffled = [...availableImages].sort(() => 0.5 - Math.random());
+        return shuffled.slice(0, totalPairs);
+    }
+    
+    // Create a card element - DYNAMIC VERSION
+    function createCardElement(imageName) {
         // Create card element
         const cardEl = document.createElement('div');
-        cardEl.className = `card ${suit} rank${rankIndex + 1}`;
-        cardEl.dataset.suit = suit;
-        cardEl.dataset.rank = rankIndex + 1;
+        cardEl.className = 'card';
+        cardEl.dataset.imageName = imageName;
         
-        // Create face element
+        // Create face element with the specific image
         const faceEl = document.createElement('div');
         faceEl.className = 'face';
         
-        // Set the appropriate face image based on suit and rank
-        const faceImage = `faces/${suitIndex}_${rankIndex + 1}.svg`;
+        // Set the image based on the image name
+        const faceImage = `faces/${imageName}`;
         faceEl.style.backgroundImage = `url("${faceImage}")`;
-        
-        // Create rank indicators for the front face
-        const rankTop = document.createElement('div');
-        rankTop.className = 'rank-top';
-        rankTop.textContent = rank;
-        
-        const rankBottom = document.createElement('div');
-        rankBottom.className = 'rank-bottom';
-        rankBottom.textContent = rank;
         
         // Create back element
         const backEl = document.createElement('div');
         backEl.className = 'back';
         backEl.style.backgroundImage = 'url("faces/back.svg")';
         
-        // Add elements to card - ranks go on the face only
-        faceEl.appendChild(rankTop);
-        faceEl.appendChild(rankBottom);
+        // Add elements to card
         cardEl.appendChild(faceEl);
         cardEl.appendChild(backEl);
         
         return cardEl;
     }
     
-    // Flip card function
-    function flipCard(cardWrapper, cardId) {
+    // Flip card function - UPDATED for image name matching
+    function flipCard(cardWrapper, imageName) {
         // If game hasn't started, start it
         if (!gameStarted) {
             startGame();
@@ -200,7 +242,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const card1 = flippedCards[0];
             const card2 = flippedCards[1];
             
-            if (card1.id === card2.id) {
+            // MATCH CONDITION: Compare image names
+            if (card1.imageName === card2.imageName) {
                 // Match found
                 playSound(matchSound);
                 
@@ -246,7 +289,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Start the game
+    // Start the game (unchanged)
     function startGame() {
         gameStarted = true;
         
@@ -257,7 +300,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
     
-    // Check for win condition
+    // Check for win condition (unchanged)
     function checkWin() {
         const totalPairs = (gridSize * gridSize) / 2;
         
@@ -282,9 +325,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Create confetti effect
+    // Create confetti effect (unchanged)
     function createConfetti() {
-        // Use the confetti library
         confetti({
             particleCount: 150,
             spread: 70,
@@ -292,7 +334,6 @@ document.addEventListener('DOMContentLoaded', () => {
             colors: ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff']
         });
         
-        // Additional bursts for more celebration
         setTimeout(() => confetti({
             particleCount: 100,
             angle: 60,
@@ -308,7 +349,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }), 400);
     }
     
-    // Utility function to play sound
+    // Utility function to play sound (unchanged)
     function playSound(soundElement) {
         if (soundEnabled) {
             soundElement.currentTime = 0;
@@ -318,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Toggle sound on/off
+    // Toggle sound on/off (unchanged)
     function toggleSound() {
         soundEnabled = !soundEnabled;
         
@@ -332,13 +373,12 @@ document.addEventListener('DOMContentLoaded', () => {
             soundToggleBtn.classList.add('sound-off');
         }
         
-        // Play a sound to indicate the change (if sound is being turned on)
         if (soundEnabled) {
             playSound(selectSound);
         }
     }
     
-    // Utility function to shuffle array
+    // Utility function to shuffle array (unchanged)
     function shuffleArray(array) {
         for (let i = array.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
@@ -347,30 +387,26 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
     
-    // Set difficulty level
+    // Set difficulty level (unchanged)
     function setDifficulty(level) {
-        // Play select sound
         playSound(selectSound);
         
-        // Update active button
         difficultyButtons.forEach(btn => btn.classList.remove('active'));
         event.target.classList.add('active');
         
-        // Set grid size based on difficulty
         switch(level) {
             case 'easy':
-                gridSize = 4; // 4x4 grid (8 pairs)
+                gridSize = 4;
                 break;
             case 'medium':
-                gridSize = 6; // 6x6 grid (18 pairs)
+                gridSize = 6;
                 break;
         }
         
-        // Restart game with new difficulty
         initGame();
     }
     
-    // Event listeners
+    // Event listeners (unchanged)
     startBtn.addEventListener('click', () => {
         playSound(selectSound);
         initGame();

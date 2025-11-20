@@ -9,7 +9,7 @@ body {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     min-height: 100vh;
-    overflow: hidden;
+    overflow-x: hidden;
 }
 
 /* Main Layout */
@@ -31,6 +31,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 20px;
+    overflow-y: auto;
 }
 
 .dashboard header {
@@ -194,11 +195,11 @@ button.active {
     position: relative;
 }
 
-/* Card Container - Fixed to prevent overflow */
+/* Card Container - Auto width based on card sizes */
 .card-container {
     display: grid;
     width: auto;
-    height: 100%;
+    height: auto;
     max-width: 100%;
     max-height: 100%;
     background: rgba(255, 255, 255, 0.05);
@@ -206,29 +207,32 @@ button.active {
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     place-items: center;
-    overflow: hidden;
+    overflow: auto;
+    margin: auto;
 }
 
-/* Dynamic grid layouts with auto-fit sizing */
+/* Dynamic grid layouts with auto width */
 .grid-4x4 {
     grid-template-columns: repeat(4, 1fr);
     grid-template-rows: repeat(4, 1fr);
     padding: 20px;
-    gap: 6px;
+    gap: 10px;
+    width: auto;
 }
 
 .grid-6x6 {
     grid-template-columns: repeat(6, 1fr);
     grid-template-rows: repeat(6, 1fr);
-    padding: 10px;
-    gap: 6px;
+    padding: 15px;
+    gap: 8px;
+    width: auto;
 }
 
 /* Memory Game Card Wrapper - Fixed sizing */
 .memory-card {
     position: relative;
     cursor: pointer;
-    width: auto;
+    width: 100%;
     height: 100%;
     display: flex;
     align-items: center;
@@ -249,11 +253,10 @@ button.active {
     box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Card Styles - Fixed sizing and alignment */
+/* Card Styles - Clean version for dynamic images */
 .card {
     position: relative !important;
-    display: inline-block !important;
-    width: auto !important;
+    width: 100% !important;
     height: 100% !important;
     background-color: #fff;
     border-radius: 8px;
@@ -272,7 +275,7 @@ button.active {
     transform: rotateY(180deg);
 }
 
-/* Card back - NO RANKS SHOULD APPEAR HERE */
+/* Card back */
 .card .back {
     position: absolute;
     top: 0;
@@ -280,192 +283,42 @@ button.active {
     width: 100%;
     height: 100%;
     background-image: url("faces/back.svg");
-    background-position: 50% 50%;
-    background-size: 100% 100%;
+    background-position: center;
+    background-size: contain;
     background-repeat: no-repeat;
     border-radius: 8px;
     backface-visibility: hidden;
     z-index: 1;
 }
 
-/* Card front - RANKS SHOULD ONLY APPEAR HERE */
+/* Card front - Images set dynamically via JavaScript */
 .card .face {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-position: 50% 50%;
-    background-size: 100% 100%;
+    background-position: center;
+    background-size: contain;
     background-repeat: no-repeat;
     border-radius: 8px;
     backface-visibility: hidden;
     transform: rotateY(180deg);
     z-index: 2;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-}
-
-/* Rank indicators - ONLY on the front face */
-.rank-top, .rank-bottom {
-    position: absolute;
-    font-weight: bold;
-    text-align: center;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    line-height: 1;
-    z-index: 3;
-    pointer-events: none;
-}
-
-.rank-top {
-    top: 5px;
-    left: 0px;
-}
-
-.rank-bottom {
-    bottom: 5px;
-    right: 0px;
-    transform: rotate(180deg);
-}
-
-.card.spades .rank-top,
-.card.spades .rank-bottom,
-.card.clubs .rank-top,
-.card.clubs .rank-bottom {
-    color: #000;
-}
-
-.card.hearts .rank-top,
-.card.hearts .rank-bottom,
-.card.diamonds .rank-top,
-.card.diamonds .rank-bottom {
-    color: #d40000;
 }
 
 /* DIFFERENT SIZES FOR 4x4 AND 6x6 GRIDS */
 
-/* 4x4 Grid - Larger cards, larger text */
-.grid-4x4 .card {
-    max-width: 100px;
-    max-height: 140px;
+/* Desktop sizes - Fixed pixel sizes */
+.grid-4x4 .memory-card {
+    width: 100px;
+    height: 140px;
 }
 
-.grid-4x4 .rank-top,
-.grid-4x4 .rank-bottom {
-    font-size: 0.7rem;
-    padding: 4px;
+.grid-6x6 .memory-card {
+    width: 70px;
+    height: 98px;
 }
-
-/* 6x6 Grid - Smaller cards, smaller text */
-.grid-6x6 .card {
-    max-width: 70px;
-    max-height: 98px;
-}
-
-.grid-6x6 .rank-top,
-.grid-6x6 .rank-bottom {
-    font-size: 0.5rem;
-    padding: 2px;
-}
-
-.grid-6x6 .rank-top {
-    top: 3px;
-    left: 1px;
-}
-
-.grid-6x6 .rank-bottom {
-    bottom: 3px;
-    right: 1px;
-}
-
-/* Card ranks */
-.card.rank1 .rank-top,
-.card.rank1 .rank-bottom { content: "A"; }
-.card.rank2 .rank-top,
-.card.rank2 .rank-bottom { content: "2"; }
-.card.rank3 .rank-top,
-.card.rank3 .rank-bottom { content: "3"; }
-.card.rank4 .rank-top,
-.card.rank4 .rank-bottom { content: "4"; }
-.card.rank5 .rank-top,
-.card.rank5 .rank-bottom { content: "5"; }
-.card.rank6 .rank-top,
-.card.rank6 .rank-bottom { content: "6"; }
-.card.rank7 .rank-top,
-.card.rank7 .rank-bottom { content: "7"; }
-.card.rank8 .rank-top,
-.card.rank8 .rank-bottom { content: "8"; }
-.card.rank9 .rank-top,
-.card.rank9 .rank-bottom { content: "9"; }
-.card.rank10 .rank-top,
-.card.rank10 .rank-bottom { content: "10"; }
-.card.rank11 .rank-top,
-.card.rank11 .rank-bottom { content: "J"; }
-.card.rank12 .rank-top,
-.card.rank12 .rank-bottom { content: "Q"; }
-.card.rank13 .rank-top,
-.card.rank13 .rank-bottom { content: "K"; }
-
-/* Card faces - Spades */
-.card.spades.rank1 .face { background-image: url("faces/0_1.svg"); }
-.card.spades.rank2 .face { background-image: url("faces/0_2.svg"); }
-.card.spades.rank3 .face { background-image: url("faces/0_3.svg"); }
-.card.spades.rank4 .face { background-image: url("faces/0_4.svg"); }
-.card.spades.rank5 .face { background-image: url("faces/0_5.svg"); }
-.card.spades.rank6 .face { background-image: url("faces/0_6.svg"); }
-.card.spades.rank7 .face { background-image: url("faces/0_7.svg"); }
-.card.spades.rank8 .face { background-image: url("faces/0_8.svg"); }
-.card.spades.rank9 .face { background-image: url("faces/0_9.svg"); }
-.card.spades.rank10 .face { background-image: url("faces/0_10.svg"); }
-.card.spades.rank11 .face { background-image: url("faces/0_11.svg"); }
-.card.spades.rank12 .face { background-image: url("faces/0_12.svg"); }
-.card.spades.rank13 .face { background-image: url("faces/0_13.svg"); }
-
-/* Hearts */
-.card.hearts.rank1 .face { background-image: url("faces/1_1.svg"); }
-.card.hearts.rank2 .face { background-image: url("faces/1_2.svg"); }
-.card.hearts.rank3 .face { background-image: url("faces/1_3.svg"); }
-.card.hearts.rank4 .face { background-image: url("faces/1_4.svg"); }
-.card.hearts.rank5 .face { background-image: url("faces/1_5.svg"); }
-.card.hearts.rank6 .face { background-image: url("faces/1_6.svg"); }
-.card.hearts.rank7 .face { background-image: url("faces/1_7.svg"); }
-.card.hearts.rank8 .face { background-image: url("faces/1_8.svg"); }
-.card.hearts.rank9 .face { background-image: url("faces/1_9.svg"); }
-.card.hearts.rank10 .face { background-image: url("faces/1_10.svg"); }
-.card.hearts.rank11 .face { background-image: url("faces/1_11.svg"); }
-.card.hearts.rank12 .face { background-image: url("faces/1_12.svg"); }
-.card.hearts.rank13 .face { background-image: url("faces/1_13.svg"); }
-
-/* Clubs */
-.card.clubs.rank1 .face { background-image: url("faces/2_1.svg"); }
-.card.clubs.rank2 .face { background-image: url("faces/2_2.svg"); }
-.card.clubs.rank3 .face { background-image: url("faces/2_3.svg"); }
-.card.clubs.rank4 .face { background-image: url("faces/2_4.svg"); }
-.card.clubs.rank5 .face { background-image: url("faces/2_5.svg"); }
-.card.clubs.rank6 .face { background-image: url("faces/2_6.svg"); }
-.card.clubs.rank7 .face { background-image: url("faces/2_7.svg"); }
-.card.clubs.rank8 .face { background-image: url("faces/2_8.svg"); }
-.card.clubs.rank9 .face { background-image: url("faces/2_9.svg"); }
-.card.clubs.rank10 .face { background-image: url("faces/2_10.svg"); }
-.card.clubs.rank11 .face { background-image: url("faces/2_11.svg"); }
-.card.clubs.rank12 .face { background-image: url("faces/2_12.svg"); }
-.card.clubs.rank13 .face { background-image: url("faces/2_13.svg"); }
-
-/* Diamonds */
-.card.diamonds.rank1 .face { background-image: url("faces/3_1.svg"); }
-.card.diamonds.rank2 .face { background-image: url("faces/3_2.svg"); }
-.card.diamonds.rank3 .face { background-image: url("faces/3_3.svg"); }
-.card.diamonds.rank4 .face { background-image: url("faces/3_4.svg"); }
-.card.diamonds.rank5 .face { background-image: url("faces/3_5.svg"); }
-.card.diamonds.rank6 .face { background-image: url("faces/3_6.svg"); }
-.card.diamonds.rank7 .face { background-image: url("faces/3_7.svg"); }
-.card.diamonds.rank8 .face { background-image: url("faces/3_8.svg"); }
-.card.diamonds.rank9 .face { background-image: url("faces/3_9.svg"); }
-.card.diamonds.rank10 .face { background-image: url("faces/3_10.svg"); }
-.card.diamonds.rank11 .face { background-image: url("faces/3_11.svg"); }
-.card.diamonds.rank12 .face { background-image: url("faces/3_12.svg"); }
-.card.diamonds.rank13 .face { background-image: url("faces/3_13.svg"); }
 
 /* Win Message */
 .message {
@@ -540,13 +393,19 @@ button.active {
     animation: pulse 0.5s ease;
 }
 
-/* Responsive Design */
+/* ===========================================
+   RESPONSIVE DESIGN
+   =========================================== */
+
+/* For tablets and smaller laptops (1024px and below) */
 @media (max-width: 1024px) {
     .game-layout {
         flex-direction: column;
         height: auto;
         min-height: 100vh;
         overflow-y: auto;
+        padding: 15px;
+        gap: 15px;
     }
     
     .dashboard {
@@ -554,10 +413,13 @@ button.active {
         flex-direction: row;
         flex-wrap: wrap;
         gap: 15px;
+        max-height: none;
+        overflow-y: visible;
     }
     
     .dashboard header {
         width: 100%;
+        flex-basis: 100%;
     }
     
     .game-stats {
@@ -582,108 +444,149 @@ button.active {
     
     .game-board {
         min-height: 60vh;
+        max-height: none;
+        flex: none;
+        padding: 15px;
     }
     
-    /* Smaller cards for tablet */
-    .grid-4x4 .card {
-        max-width: 80px;
-        max-height: 107px;
+    .card-container {
+        overflow: auto;
+        width: auto;
     }
     
-    .grid-4x4 .rank-top,
-    .grid-4x4 .rank-bottom {
-        font-size: 0.8rem;
+    /* Adjusted card sizes for tablet */
+    .grid-4x4 {
+        gap: 8px;
+        padding: 15px;
     }
     
-    .grid-6x6 .card {
-        max-width: 60px;
-        max-height: 80px;
+    .grid-4x4 .memory-card {
+        width: 80px;
+        height: 107px;
     }
     
-    .grid-6x6 .rank-top,
-    .grid-6x6 .rank-bottom {
-        font-size: 0.55rem;
+    .grid-6x6 {
+        gap: 6px;
+        padding: 12px;
+    }
+    
+    .grid-6x6 .memory-card {
+        width: 60px;
+        height: 80px;
     }
 }
 
+/* For mobile devices (768px and below) */
 @media (max-width: 768px) {
+    .game-layout {
+        padding: 10px;
+        gap: 10px;
+    }
+    
     .dashboard {
         flex-direction: column;
+        padding: 15px;
+        gap: 15px;
+    }
+    
+    .dashboard header,
+    .game-stats,
+    .difficulty,
+    .controls,
+    .instructions {
+        width: 100%;
+        flex: none;
+    }
+    
+    .game-board {
+        min-height: 70vh;
+        padding: 10px;
     }
     
     /* Even smaller cards for mobile */
-    .grid-4x4 .card {
-        max-width: 70px;
-        max-height: 93px;
-    }
-    
-    .grid-4x4 .rank-top,
-    .grid-4x4 .rank-bottom {
-        font-size: 0.7rem;
-    }
-    
-    .grid-6x6 .card {
-        max-width: 50px;
-        max-height: 67px;
-    }
-    
-    .grid-6x6 .rank-top,
-    .grid-6x6 .rank-bottom {
-        font-size: 0.5rem;
-    }
-    
     .grid-4x4 {
         gap: 6px;
+        padding: 12px;
+    }
+    
+    .grid-4x4 .memory-card {
+        width: 70px;
+        height: 93px;
     }
     
     .grid-6x6 {
         gap: 4px;
+        padding: 10px;
+    }
+    
+    .grid-6x6 .memory-card {
+        width: 50px;
+        height: 67px;
     }
 }
 
+/* For very small mobile devices (480px and below) */
 @media (max-width: 480px) {
     .game-layout {
-        padding: 10px;
+        padding: 5px;
+        gap: 8px;
     }
     
     .dashboard {
-        padding: 15px;
+        padding: 10px;
+        gap: 12px;
     }
     
     .game-board {
-        padding: 10px;
+        padding: 8px;
+        min-height: 65vh;
     }
     
     .card-container {
-        padding: 8px;
+        padding: 5px;
     }
     
     /* Smallest cards for very small screens */
-    .grid-4x4 .card {
-        max-width: 60px;
-        max-height: 80px;
-    }
-    
-    .grid-4x4 .rank-top,
-    .grid-4x4 .rank-bottom {
-        font-size: 0.6rem;
-    }
-    
-    .grid-6x6 .card {
-        max-width: 40px;
-        max-height: 53px;
-    }
-    
-    .grid-6x6 .rank-top,
-    .grid-6x6 .rank-bottom {
-        font-size: 0.45rem;
-    }
-    
     .grid-4x4 {
         gap: 4px;
+        padding: 10px;
+    }
+    
+    .grid-4x4 .memory-card {
+        width: 60px;
+        height: 80px;
     }
     
     .grid-6x6 {
         gap: 3px;
+        padding: 8px;
+    }
+    
+    .grid-6x6 .memory-card {
+        width: 40px;
+        height: 53px;
+    }
+}
+
+/* For extremely small screens (360px and below) */
+@media (max-width: 360px) {
+    .grid-4x4 .memory-card {
+        width: 50px;
+        height: 67px;
+    }
+    
+    .grid-6x6 .memory-card {
+        width: 35px;
+        height: 47px;
+    }
+    
+    .grid-4x4 {
+        gap: 3px;
+        padding: 8px;
+    }
+    
+    .grid-6x6 {
+        gap: 2px;
+        padding: 6px;
     }
 }
